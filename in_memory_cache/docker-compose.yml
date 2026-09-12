@@ -1,0 +1,25 @@
+services:
+  redis:
+    image: redis:8.8.2-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  asynqmon:
+    image: hibiken/asynqmon:0.7.1
+    container_name: asynqmon
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_ADDR=redis:6379
+      - REDIS_DB=0
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
