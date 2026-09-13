@@ -1,0 +1,73 @@
+# 1. Payload Notifikasi Standar (Target token)
+curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "token": "dK_example_device_token_xyz123",
+      "notification": {
+        "title": "Halo Pengguna",
+        "body": "Ini adalah pesan push notification dari mock server",
+        "image": "https://example.com/banner.png"
+      },
+      "data": {
+        "user_id": "1001",
+        "action": "open_chat"
+      }
+    }
+  }'
+
+# 2. Payload Notifikasi Cross-Platform (Android, APNs, Webpush)
+curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "topic": "promo-kilat",
+      "notification": {
+        "title": "Diskon Spesial",
+        "body": "Dapatkan diskon 50% hari ini!"
+      },
+      "android": {
+        "priority": "HIGH",
+        "notification": {
+          "channel_id": "promo_channel",
+          "color": "#FF5722",
+          "icon": "ic_promo",
+          "sound": "promo_sound"
+        }
+      },
+      "apns": {
+        "headers": {
+          "apns-priority": "10"
+        },
+        "payload": {
+          "aps": {
+            "alert": {
+              "title": "Diskon Spesial iOS",
+              "body": "Dapatkan diskon 50% khusus pengguna Apple!"
+            },
+            "badge": 1,
+            "sound": "default"
+          }
+        }
+      },
+      "webpush": {
+        "notification": {
+          "title": "Diskon Web",
+          "body": "Kunjungi halaman web kami sekarang",
+          "icon": "https://example.com/icon.png"
+        }
+      }
+    }
+  }'
+
+# 3. Pengujian Validasi Error (Tanpa token, topic, atau condition)
+curl -i -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "notification": {
+        "title": "Tanpa Target",
+        "body": "Request ini harus ditolak"
+      }
+    }
+  }'
