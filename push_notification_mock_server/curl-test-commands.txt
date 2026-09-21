@@ -1,5 +1,5 @@
-# 1. Payload Notifikasi Standar (Target token)
-curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+# 1. Payload Notifikasi Standar (Target token) - Port Host: 8081 (Docker) atau 8080 (Lokal)
+curl -X POST http://localhost:8081/v1/projects/my-firebase-project/messages:send \
   -H "Content-Type: application/json" \
   -d '{
     "message": {
@@ -16,8 +16,24 @@ curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send
     }
   }'
 
-# 2. Payload Notifikasi Cross-Platform (Android, APNs, Webpush)
-curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+# 2. Payload Notifikasi dengan 'scheduled_at' (Pengujian Metrik Scheduling Delay/Jitter untuk Skripsi)
+curl -X POST http://localhost:8081/v1/projects/my-firebase-project/messages:send \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": {
+      "token": "dK_example_device_token_xyz123",
+      "notification": {
+        "title": "Notifikasi Terjadwal",
+        "body": "Pengujian presisi scheduler"
+      },
+      "data": {
+        "scheduled_at": "1726920000000"
+      }
+    }
+  }'
+
+# 3. Payload Notifikasi Cross-Platform (Android, APNs, Webpush)
+curl -X POST http://localhost:8081/v1/projects/my-firebase-project/messages:send \
   -H "Content-Type: application/json" \
   -d '{
     "message": {
@@ -60,8 +76,8 @@ curl -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send
     }
   }'
 
-# 3. Pengujian Validasi Error (Tanpa token, topic, atau condition)
-curl -i -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:send \
+# 4. Pengujian Validasi Error (Tanpa token, topic, atau condition)
+curl -i -X POST http://localhost:8081/v1/projects/my-firebase-project/messages:send \
   -H "Content-Type: application/json" \
   -d '{
     "message": {
@@ -71,3 +87,6 @@ curl -i -X POST http://localhost:8080/v1/projects/my-firebase-project/messages:s
       }
     }
   }'
+
+# 5. Cek Endpoint Metrics Prometheus
+curl http://localhost:8081/metrics

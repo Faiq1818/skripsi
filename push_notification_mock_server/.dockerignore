@@ -1,0 +1,4 @@
+.git
+.gitignore
+*.log
+push_notification_mock_server

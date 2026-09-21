@@ -11,7 +11,7 @@ services:
     image: hibiken/asynqmon:0.7.1
     container_name: asynqmon
     ports:
-      - "8080:8080"
+      - "8082:8080"
     environment:
       - REDIS_ADDR=redis:6379
       - REDIS_DB=0
