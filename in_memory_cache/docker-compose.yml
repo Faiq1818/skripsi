@@ -20,6 +20,22 @@ services:
     networks:
       - app-network
 
+  consumer:
+    build:
+      context: ./consumer
+      dockerfile: Dockerfile
+    container_name: in-memory-consumer
+    environment:
+      - REDIS_ADDR=redis:6379
+      - MOCK_SERVER_URL=${MOCK_SERVER_URL:-http://host.docker.internal:8081}
+      - CONSUMER_CONCURRENCY=${CONSUMER_CONCURRENCY:-10}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
